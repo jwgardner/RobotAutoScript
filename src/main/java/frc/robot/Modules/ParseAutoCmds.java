@@ -1,8 +1,12 @@
 package frc.robot.Modules;
 
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.*;
+
+// validate correct # of params for command
+// strip white space from script
+// validate format of script commands 2 letter, (), ;, numbers and commas in ()
+// validate if command follows command with P
 
 public class ParseAutoCmds extends SequentialCommandGroup {
     
@@ -11,9 +15,9 @@ public class ParseAutoCmds extends SequentialCommandGroup {
     public static SequentialCommandGroup parseAutoCmds () {
         String tempScript;
         String[] commands;
-        String commandName;
+        String scriptCommand;
         String paramList;
-        String commandToAdd;
+        String[] params;
 
         // get script from shuffleboard, string for now
         tempScript = "DT(50,50,4); FF(5)P; SH(5);";
@@ -22,42 +26,34 @@ public class ParseAutoCmds extends SequentialCommandGroup {
         commands = tempScript.split(";");
 
         for (int i=0; i < commands.length; i++) {
-            // get command name
-            commandName = getCommandName(commands[i].substring(0,commands[i].indexOf(')')-1));
-
-            // get parameter list
-            paramList = commands[i].substring(commands[i].indexOf('('), commands[i].indexOf(')'));
-
-            // Command to add
-            commandToAdd = commandName + paramList;
-
             // get parallel indicator - To Be Implemented
+            if (commands[i].contains(")P")) {
+                // process ParallelCommandGroup, returns new index
+                ParseParallelCmds parallelObj = new ParseParallelCmds();
+                i = parallelObj.parseParallelCmds(m_AutoCommands, commands, i);                
+            }
+            else {
+                scriptCommand = commands[i].substring(0,commands[i].indexOf(')')-1);
+                paramList = commands[i].substring(commands[i].indexOf('(')+1, commands[i].indexOf(')')-1);
+                params = paramList.split(",");
 
-            // add command to sequential command list *** string need to be interpreted differently ?????
-            m_AutoCommands.addCommands(new Command commandToAdd);
-
+                switch (scriptCommand) {
+                    case "DT":
+                        ScriptDriveTank newCommand = new ScriptDriveTank();
+                        newCommand.setScriptDriveTank(Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2]));
+                        m_AutoCommands.addCommands(newCommand);
+                        break;
+                    case "FF":
+                        // commandName = "ScriptFeeder";
+                        break;
+                    case "SH":
+                        // commandName = "ScriptShooter";
+                        break;
+                    default:
+                        throw new IllegalArgumentException("unknown script command : " + scriptCommand);
+                }           
+            } 
         }
-
         return m_AutoCommands;
     }
-
-    public static String getCommandName (String scriptCommand) {
-        String commandName;
-        // convert script notation to command name to add
-        switch (scriptCommand) {
-            case "DT":
-                commandName = "ScriptDriveTank";
-                break;
-            case "FF":
-                commandName = "ScriptFeeder";
-                break;
-            case "SH":
-                commandName = "ScriptShooter";
-                break;
-            default:
-            throw new IllegalArgumentException("unknown script command : " + scriptCommand);
-        }
-        return commandName;
-    }
-
 }
