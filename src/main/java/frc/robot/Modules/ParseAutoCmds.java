@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class ParseAutoCmds extends SequentialCommandGroup {
     
-    SequentialCommandGroup m_AutoCommands = new  SequentialCommandGroup();
+    static SequentialCommandGroup m_AutoCommands = new  SequentialCommandGroup();
 
     public static SequentialCommandGroup parseAutoCmds () {
         String tempScript;
