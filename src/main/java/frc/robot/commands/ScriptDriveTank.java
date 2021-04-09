@@ -26,17 +26,11 @@ public class ScriptDriveTank extends CommandBase {
   //  addRequirements(subsystem);
   //}
 
-  public ScriptDriveTank() {
-    m_lPower = 0;
-    m_rPower = 0;
-    m_seconds = 0;
-    m_subsystem = null;
-  }
-
-  public void setScriptDriveTank(float lPower, float rPower, float seconds) {
+  public ScriptDriveTank(float lPower, float rPower, float seconds) {
     m_lPower = lPower;
     m_rPower = rPower;
     m_seconds = seconds;
+    m_subsystem = null;
   }
 
   // Called when the command is initially scheduled.

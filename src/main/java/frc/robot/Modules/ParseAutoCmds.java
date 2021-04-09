@@ -38,16 +38,14 @@ public class ParseAutoCmds extends SequentialCommandGroup {
                 params = paramList.split(",");
 
                 switch (scriptCommand) {
-                    case "DT":
-                        ScriptDriveTank newCommand = new ScriptDriveTank();
-                        newCommand.setScriptDriveTank(Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2]));
-                        m_AutoCommands.addCommands(newCommand);
+                    case "DT":                        
+                        m_AutoCommands.addCommands(new ScriptDriveTank(Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2])));
                         break;
                     case "FF":
-                        // commandName = "ScriptFeeder";
+                        m_AutoCommands.addCommands(new ScriptFeeder(Float.parseFloat(params[0])));
                         break;
                     case "SH":
-                        // commandName = "ScriptShooter";
+                        m_AutoCommands.addCommands(new ScriptShooter(Float.parseFloat(params[0])));
                         break;
                     default:
                         throw new IllegalArgumentException("unknown script command : " + scriptCommand);

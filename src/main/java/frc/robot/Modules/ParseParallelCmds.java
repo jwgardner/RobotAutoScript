@@ -18,17 +18,15 @@ public class ParseParallelCmds extends ParallelCommandGroup {
             params = paramList.split(",");
             
             switch (scriptCommand) {
-                case "DT":
-                    ScriptDriveTank newCommand = new ScriptDriveTank();
-                    newCommand.setScriptDriveTank(Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2]));
-                    m_ParallelCommands.addCommands(newCommand);
-                    break;
-                case "FF":
-                    // commandName = "ScriptFeeder";
-                    break;
-                case "SH":
-                    // commandName = "ScriptShooter";
-                    break;
+                case "DT":                        
+                        m_ParallelCommands.addCommands(new ScriptDriveTank(Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2])));
+                        break;
+                    case "FF":
+                        m_ParallelCommands.addCommands(new ScriptFeeder(Float.parseFloat(params[0])));
+                        break;
+                    case "SH":
+                        m_ParallelCommands.addCommands(new ScriptShooter(Float.parseFloat(params[0])));
+                        break;
                 default:
                     throw new IllegalArgumentException("unknown script command : " + scriptCommand);
             } 
