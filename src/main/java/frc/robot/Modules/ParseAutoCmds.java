@@ -21,7 +21,8 @@ public class ParseAutoCmds extends SequentialCommandGroup {
         // validate correct # of params for command
         // strip white space from script
         // validate format of script commands 2 letter, (), ;, numbers and commas in ()
-        // validate if command follows command with P// ScriptValidator sv = new ScriptValidator();
+        // validate if command follows command with P
+        // ScriptValidator sv = new ScriptValidator();
         // if (!sv.isValid(tempScript) ) 
         //    return null;
 
@@ -29,10 +30,10 @@ public class ParseAutoCmds extends SequentialCommandGroup {
         commands = tempScript.split(";");
 
         for (int i=0; i < commands.length; i++) {
-            // get parallel indicator - To Be Implemented
+            // process parallel commands
             if (commands[i].contains(")P")) {
 
-                // Get parallel command group object and add commands for each in parallel
+                // Get parallel command group object and add commands for each in parallel command
                 ParallelCommandGroup parallelCommands = new  ParallelCommandGroup();
 
                 do {
