@@ -18,9 +18,10 @@ public class ScriptShooter extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ScriptShooter(float seconds) {
+  public ScriptShooter(SubShooter subsystem, float seconds) {
     m_seconds = seconds;
-    m_subsystem = null;
+    m_subsystem = subsystem;
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.

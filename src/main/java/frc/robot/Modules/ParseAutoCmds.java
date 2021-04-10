@@ -4,8 +4,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 public class ParseAutoCmds extends SequentialCommandGroup {    
+
+    SubDriveTrain m_SubDriveTrain = new SubDriveTrain();
+    SubFeeder m_SubFeeder = new SubFeeder();
+    SubShooter m_SubShooter = new SubShooter();
 
     public SequentialCommandGroup parseAutoCmds () {
         String tempScript;
@@ -15,11 +20,11 @@ public class ParseAutoCmds extends SequentialCommandGroup {
 
         // get script from shuffleboard, string for now, P implies include the next command in parallel, can have >1 P commands in sequence
         tempScript = "DT(50,50,4);FF(5)P;SH(5);";
-        // remove whitespace
+        // remove whitespace, convert to uppercase
         tempScript = tempScript.replaceAll("\\s+","");
+        tempScript.toUpperCase();
 
         // validate correct # of params for command
-        // strip white space from script
         // validate format of script commands 2 letter, (), ;, numbers and commas in ()
         // validate if command follows command with P
         // ScriptValidator sv = new ScriptValidator();
@@ -30,9 +35,9 @@ public class ParseAutoCmds extends SequentialCommandGroup {
         commands = tempScript.split(";");
 
         for (int i=0; i < commands.length; i++) {
-            // process parallel commands
+            
             if (commands[i].contains(")P")) {
-
+                // process parallel commands
                 // Get parallel command group object and add commands for each in parallel command
                 ParallelCommandGroup parallelCommands = new  ParallelCommandGroup();
 
@@ -45,6 +50,7 @@ public class ParseAutoCmds extends SequentialCommandGroup {
                 autoSeqCommands.addCommands(parallelCommands);
             }
             else {
+                // process sequential command
                 addScriptCommand(autoSeqCommands, commands[i]);                                         
             } 
         }
@@ -62,13 +68,13 @@ public class ParseAutoCmds extends SequentialCommandGroup {
 
         switch (scriptCommand) {
             case "DT":                        
-                commandList.addCommands(new ScriptDriveTank(Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2])));
+                commandList.addCommands(new ScriptDriveTank(m_SubDriveTrain, Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2])));
                 break;
             case "FF":
-                commandList.addCommands(new ScriptFeeder(Float.parseFloat(params[0])));
+                commandList.addCommands(new ScriptFeeder(m_SubFeeder, Float.parseFloat(params[0])));
                 break;
             case "SH":
-                commandList.addCommands(new ScriptShooter(Float.parseFloat(params[0])));
+                commandList.addCommands(new ScriptShooter(m_SubShooter, Float.parseFloat(params[0])));
                 break;
             default:
                 throw new IllegalArgumentException("unknown script command : " + scriptCommand);

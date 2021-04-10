@@ -26,11 +26,12 @@ public class ScriptDriveTank extends CommandBase {
   //  addRequirements(subsystem);
   //}
 
-  public ScriptDriveTank(float lPower, float rPower, float seconds) {
+  public ScriptDriveTank(SubDriveTrain subsystem, float lPower, float rPower, float seconds) {
     m_lPower = lPower;
     m_rPower = rPower;
     m_seconds = seconds;
-    m_subsystem = null;
+    m_subsystem = subsystem;
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.

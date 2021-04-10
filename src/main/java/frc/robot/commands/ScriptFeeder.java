@@ -18,9 +18,10 @@ public class ScriptFeeder extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ScriptFeeder(float seconds) {
+  public ScriptFeeder(SubFeeder subsystem, float seconds) {
     m_seconds = seconds;
-    m_subsystem = null;
+    m_subsystem = subsystem;
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
