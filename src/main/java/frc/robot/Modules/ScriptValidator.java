@@ -1,11 +1,77 @@
 package frc.robot.Modules;
+import java.util.*;
 
 public class ScriptValidator {
-    
-    public boolean isValid(String t) {
-        //
+    // SL SLeep
+    // DT Drive Tank
+    // FF Feed Forward
+    // SH Shooter
+
+    // NEW SCRIPT COMMANDS ADDED HERE *******************************************************************************
+    private static final String[] VALID_COMMAND = {"SL", "DT", "FF", "SH"};
+    private static final int[] VALID_PARAMS =     {  1,    3,    1,    1 } ;
+    // **************************************************************************************************************
+
+    public boolean isValid(String scriptString) {
+        String[] commands;
+        String scriptCommand;
+        String paramList;
+        String[] params;
+        int pPos;
+
+        //Check for valid script
+
+        try {                
+
+            commands = scriptString.split(";");
+
+            for (int i=0; i < commands.length; i++) {
+                // get script command prior to open paren                
+                scriptCommand = commands[i].substring(0,commands[i].indexOf('('));
+                
+                // check for valid script command against valid list
+                if (!(Arrays.asList(VALID_COMMAND).contains(scriptCommand))) {                
+                    System.out.print("invalid Command"+"\n");
+                    return false;
+                }
+                
+                paramList = commands[i].substring(commands[i].indexOf('(')+1, commands[i].indexOf(')'));                
+                params = paramList.split(",");
+
+                // check # of parameters for command against valid list
+                if (params.length != VALID_PARAMS[Arrays.asList(VALID_COMMAND).indexOf(scriptCommand)]) {                    
+                    System.out.print("invalid number of parameters "+"\n");
+                    return false;
+                }
+
+                // 1 set open and close parens
+                if (commands[i].indexOf('(') < 0 || commands[i].indexOf(')') < 0 ||  commands[i].indexOf('(') > commands[i].indexOf(')')) {
+                    System.out.print("mismatching Parens "+"\n");
+                    return false;
+                }
+
+                //only numbers and commas in parens
+                if (!paramList.matches("^[-,.0-9]+$")) {
+                    System.out.print("parameters only numbers"+"\n");
+                    return false;
+                }
+
+                // check if there is a P, its the last character and its not the last script command
+                pPos = commands[i].indexOf('P');
+                
+                if (pPos > 0 && (pPos < commands[i].length()-1 || i >= commands.length-1)) {
+                    System.out.print("P placement issue"+ "\n");
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            System.out.print("System Error"+ "\n");
+            return false;
+        }
+
 
         return true;
     }
 
 }
+

@@ -24,12 +24,10 @@ public class ParseAutoCmds extends SequentialCommandGroup {
         tempScript = tempScript.replaceAll("\\s+","");
         tempScript.toUpperCase();
 
-        // validate correct # of params for command
-        // validate format of script commands 2 letter, (), ;, numbers and commas in ()
-        // validate if command follows command with P
-        // ScriptValidator sv = new ScriptValidator();
-        // if (!sv.isValid(tempScript) ) 
-        //    return null;
+
+        ScriptValidator sv = new ScriptValidator();
+        if (!sv.isValid(tempScript)) 
+            return null;
 
         // split commands by delimiter
         commands = tempScript.split(";");
@@ -44,7 +42,7 @@ public class ParseAutoCmds extends SequentialCommandGroup {
                 do {
                     addScriptCommand(parallelCommands, commands[i]);
                     i++;
-                } while (commands[i-1].contains(")P") && i < commands.length);  // check index in case P is on last command (and shouldn't be! validate it!)
+                } while (commands[i-1].contains(")P"));  // keep adding parallel commands while the previous command has a P
 
                 // add the group of parallel commands to the overall sequence command group
                 autoSeqCommands.addCommands(parallelCommands);
@@ -62,10 +60,11 @@ public class ParseAutoCmds extends SequentialCommandGroup {
         String paramList;
         String[] params;
 
-        scriptCommand = command.substring(0,command.indexOf(')')-1);
-        paramList = command.substring(command.indexOf('(')+1, command.indexOf(')')-1);
+        scriptCommand = command.substring(0, command.indexOf('('));
+        paramList = command.substring(command.indexOf('(')+1, command.indexOf(')'));
         params = paramList.split(",");
 
+        // NEW SCRIPT COMMANDS ADDED HERE *******************************************************************************
         switch (scriptCommand) {
             case "DT":                        
                 commandList.addCommands(new ScriptDriveTank(m_SubDriveTrain, Float.parseFloat(params[0]), Float.parseFloat(params[1]), Float.parseFloat(params[2])));
@@ -79,5 +78,6 @@ public class ParseAutoCmds extends SequentialCommandGroup {
             default:
                 throw new IllegalArgumentException("unknown script command : " + scriptCommand);
         }    
+        
     }
 }
