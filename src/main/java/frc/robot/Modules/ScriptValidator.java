@@ -44,6 +44,14 @@ public class ScriptValidator {
                     return false;
                 }
 
+                //check for non number or blank param
+                for (i=0; i < params.length; i++){
+                    if (!params[i].matches("[0-9]+")) {
+                        System.out.print("parameter not a number or missing "+"\n");
+                        return false;
+                    }
+                }
+                
                 // 1 set open and close parens
                 if (commands[i].indexOf('(') < 0 || commands[i].indexOf(')') < 0 ||  commands[i].indexOf('(') > commands[i].indexOf(')')) {
                     System.out.print("mismatching parens "+"\n");
@@ -51,7 +59,7 @@ public class ScriptValidator {
                 }
 
                 //only numbers and commas in parens
-                if (!paramList.matches("^[-,.0-9]+$")) {
+                if (!paramList.matches("^((\\s*-?\\d*(.\\d*)?\\s*)(,|$))+")) {
                     System.out.print("parameters may be only numbers"+"\n");
                     return false;
                 }
