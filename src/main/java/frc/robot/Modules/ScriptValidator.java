@@ -31,7 +31,7 @@ public class ScriptValidator {
                 
                 // check for valid script command against valid list
                 if (!(Arrays.asList(VALID_COMMAND).contains(scriptCommand))) {                
-                    System.out.print("invalid Command"+"\n");
+                    System.out.print("invalid script command"+"\n");
                     return false;
                 }
                 
@@ -46,13 +46,13 @@ public class ScriptValidator {
 
                 // 1 set open and close parens
                 if (commands[i].indexOf('(') < 0 || commands[i].indexOf(')') < 0 ||  commands[i].indexOf('(') > commands[i].indexOf(')')) {
-                    System.out.print("mismatching Parens "+"\n");
+                    System.out.print("mismatching parens "+"\n");
                     return false;
                 }
 
                 //only numbers and commas in parens
                 if (!paramList.matches("^[-,.0-9]+$")) {
-                    System.out.print("parameters only numbers"+"\n");
+                    System.out.print("parameters may be only numbers"+"\n");
                     return false;
                 }
 
